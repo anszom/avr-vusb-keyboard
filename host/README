@@ -1,0 +1,3 @@
+This code is based on avrusbboot (http://www.fischl.de/avrusbboot/) by Thomas Fischl.
+
+I (Andrzej Szombierski) have adjusted it to use a different VID:PID pair, and support retransmissions.
