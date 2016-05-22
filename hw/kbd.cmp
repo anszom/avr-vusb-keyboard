@@ -1,0 +1,150 @@
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = nie, 23 sie 2015, 15:07:03
+
+BeginCmp
+TimeStamp = /55D4D808;
+Reference = C1;
+ValeurCmp = 27p;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D864;
+Reference = C2;
+ValeurCmp = 27p;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D81B;
+Reference = C3;
+ValeurCmp = 100n;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D823;
+Reference = C4;
+ValeurCmp = 10u;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D8D37A;
+Reference = C5;
+ValeurCmp = 10u;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D832;
+Reference = D3;
+ValeurCmp = LED;
+IdModule  = LED-3MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D83F;
+Reference = D4;
+ValeurCmp = LED;
+IdModule  = LED-3MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D845;
+Reference = D5;
+ValeurCmp = LED;
+IdModule  = LED-3MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D5D7;
+Reference = IC1;
+ValeurCmp = ATMEGA16-A;
+IdModule  = TQFP44;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D64FF1;
+Reference = P1;
+ValeurCmp = CONN_5;
+IdModule  = SIL-5;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D637;
+Reference = P2;
+ValeurCmp = CONN_8;
+IdModule  = SIL-8;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D7E0;
+Reference = P3;
+ValeurCmp = CONN_18;
+IdModule  = SIL-18;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D6522C;
+Reference = P4;
+ValeurCmp = CONN_1;
+IdModule  = 1PIN_SMD;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4DAFB;
+Reference = R1;
+ValeurCmp = 68R;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4DC00;
+Reference = R2;
+ValeurCmp = 1K5;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4DB08;
+Reference = R3;
+ValeurCmp = 68R;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4E91D;
+Reference = R4;
+ValeurCmp = 100R;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4E92A;
+Reference = R5;
+ValeurCmp = 100R;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4E930;
+Reference = R6;
+ValeurCmp = 100R;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D854AF;
+Reference = U1;
+ValeurCmp = LD1117A;
+IdModule  = SOT223;
+EndCmp
+
+BeginCmp
+TimeStamp = /55D4D7EF;
+Reference = X1;
+ValeurCmp = 12MHz;
+IdModule  = HC-49V;
+EndCmp
+
+EndListe

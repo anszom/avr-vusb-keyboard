@@ -1,0 +1,68 @@
+EESchema-DOCLIB  Version 2.0  Date: sob, 22 sie 2015, 12:48:23
+#
+$CMP CONN_18
+D Symbole general de connexion
+K CONN
+$ENDCMP
+#
+$CMP LD1117A
+D LM78L05ACZ, Positive 100mA 30V Linear Regulator, Fixed Output 5V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP LM78L12ACZ
+D LM78L12ACZ, Positive 100mA 30V Linear Regulator, Fixed Output 12V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP MC78L05AACP
+D MC78L05AACP, Positive 100mA 30V Linear Regulator, Fixed Output 5V, Highest Accurate, TO-92
+K Voltage Regulator 100mA Positive Highest Accurate
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP MC78L05ACP
+D MC78L05ACP, Positive 100mA 30V Linear Regulator, Fixed Output 5V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP MC78L06ACP
+D MC78L06ACP, Positive 100mA 30V Linear Regulator, Fixed Output 6V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP MC78L08ACP
+D MC78L08ACP, Positive 100mA 30V Linear Regulator, Fixed Output 8V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP MC78L12ACP
+D MC78L12ACP, Positive 100mA 30V Linear Regulator, Fixed Output 12V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP MC78L15ACP
+D MC78L15ACP, Positive 100mA 30V Linear Regulator, Fixed Output 15V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP MC78L18ACP
+D MC78L18ACP, Positive 100mA 30V Linear Regulator, Fixed Output 18V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+$CMP MC78L24ACP
+D MC78L24ACP, Positive 100mA 30V Linear Regulator, Fixed Output 24V, TO-92
+K Voltage Regulator 100mA Positive
+F http://www.fairchildsemi.com/ds/LM/LM78L05A.pdf
+$ENDCMP
+#
+#End Doc Library
