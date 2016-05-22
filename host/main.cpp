@@ -38,5 +38,7 @@ int main(int argc, char **argv) {
     pPage = pPage->getNext();
   } 
 
+  bootloader->startApplication();
+
   return 0;
-};
+}

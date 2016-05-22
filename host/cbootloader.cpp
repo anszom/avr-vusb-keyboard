@@ -40,7 +40,7 @@ int     rval, i;
  * example device lookup where an individually reserved PID is used, see our
  * RemoteSensor reference implementation.
  */
-static usb_dev_handle   *findDevice(void)
+static usb_dev_handle   *findDevice(int vid, int pid, const char *str)
 {
 struct usb_bus      *bus;
 struct usb_device   *dev;
@@ -50,7 +50,7 @@ usb_dev_handle      *handle = 0;
     usb_find_devices();
     for(bus=usb_busses; bus; bus=bus->next){
         for(dev=bus->devices; dev; dev=dev->next){
-            if(dev->descriptor.idVendor == USBDEV_SHARED_VENDOR && dev->descriptor.idProduct == USBDEV_SHARED_PRODUCT){
+            if(dev->descriptor.idVendor == vid && dev->descriptor.idProduct == pid) {
                 char    string[256];
                 int     len;
                 handle = usb_open(dev); /* we need to open the device in order to query strings */
@@ -58,20 +58,14 @@ usb_dev_handle      *handle = 0;
                     fprintf(stderr, "Warning: cannot open USB device: %s\n", usb_strerror());
                     continue;
                 }
-                len = usbGetStringAscii(handle, dev->descriptor.iManufacturer, 0x0409, string, sizeof(string));
-                if(len < 0){
-                    fprintf(stderr, "warning: cannot query manufacturer for device: %s\n", usb_strerror());
-                    goto skipDevice;
-                }
-                if(strcmp(string, "www.fischl.de") != 0)
-                    goto skipDevice;
+		if(!str)
+			break;
                 len = usbGetStringAscii(handle, dev->descriptor.iProduct, 0x0409, string, sizeof(string));
                 if(len < 0){
                     fprintf(stderr, "warning: cannot query product for device: %s\n", usb_strerror());
                     goto skipDevice;
                 }
-		//  fprintf(stderr, "seen product ->%s<-\n", string); 
-                if(strcmp(string, "AVRUSBBoot") == 0)
+                if(strcmp(string, str) == 0)
                     break;
 skipDevice:
                 usb_close(handle);
@@ -81,8 +75,6 @@ skipDevice:
         if(handle)
             break;
     }
-    if(!handle)
-        fprintf(stderr, "Could not find USB device www.fischl.de/AVRUSBBoot\n");
     return handle;
 }
 
@@ -90,9 +82,18 @@ skipDevice:
 
 CBootloader::CBootloader() {
   usb_init();
-  if((usbhandle = findDevice()) == NULL){
-    fprintf(stderr, "Could not find USB device \"AVRUSBBoot\" with vid=0x%x pid=0x%x\n", USBDEV_SHARED_VENDOR, USBDEV_SHARED_PRODUCT);
-    exit(1);
+  for(;;) {
+  	usbhandle = findDevice(0x1209, 0x0cbd, "AVRUSBBoot");
+	if(usbhandle)
+		break;
+
+  	usbhandle = findDevice(0x1209, 0x0cbd, NULL);
+	if(usbhandle) {
+		printf("Attempting reboot-to-bootloader\n");
+		usb_control_msg(usbhandle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, 0, 0, 0, 0, 0, 1000);
+		usb_close(usbhandle);
+	}
+	sleep(1);
   }
 }
 
@@ -101,13 +102,13 @@ CBootloader::~CBootloader() {
 }
 
 unsigned int CBootloader::getPagesize() {
-  char       buffer[8];
+  unsigned char       buffer[8];
   int                 nBytes;
 
   nBytes = usb_control_msg(usbhandle, 
 			   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, 
 			   3, 0, 0, 
-			   buffer, sizeof(buffer), 
+			   (char*)buffer, sizeof(buffer), 
 			   5000);
 
   if (nBytes != 2) {
@@ -138,7 +139,8 @@ void CBootloader::startApplication() {
 void CBootloader::writePage(CPage* page) {
 
   int nBytes;
-
+  usleep(50000);
+for(;;){
   nBytes = usb_control_msg(usbhandle, 
 			   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, 
 			   2, page->getPageaddress(), 0, 
@@ -147,7 +149,8 @@ void CBootloader::writePage(CPage* page) {
 
   if (nBytes != page->getPagesize()) {
     fprintf(stderr, "Error: wrong byte count in writePage: %d !\n", nBytes);
-    exit(1);
-  }
+	sleep(1);
+  } else break;
+}
 }
 

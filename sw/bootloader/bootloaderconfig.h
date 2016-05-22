@@ -25,13 +25,11 @@
 #define __bootloaderconfig_h_included__
 
 #define BOOTLOADER_INIT \
-    PORTB = 0xff;       \
-    DDRB  = 0;          \
-    PORTC = 0xff;       \
-    DDRC  = 0;          \
-    PORTD = 0xfa;       \
-    DDRD  = 0x02;
+	DDRC=0xff; \
+	PORTC=0; \
+	DDRB = 0; \
+	PORTB=0xff; \
 
-#define BOOTLOADER_CONDITION ((PINC & (1 << PC2)) == 0)
+#define BOOTLOADER_CONDITION (1) //(PINB&1)==0)
 
 #endif /* __bootloader_h_included__ */
