@@ -8,12 +8,48 @@
 
 // todo:
 // Boot interface
-// remote wakeup
-// see https://github.com/gblargg/adb-v-usb
 
 /* ------------------------------------------------------------------------- */
 /* ----------------------------- USB interface ----------------------------- */
 /* ------------------------------------------------------------------------- */
+
+// copied from usbdrv.c, values adjusted
+
+PROGMEM const char usbDescriptorConfiguration[] = {    /* USB configuration descriptor */
+    9,          /* sizeof(usbDescriptorConfiguration): length of descriptor in bytes */
+    USBDESCR_CONFIG,    /* descriptor type */
+    34, 0,
+                /* total length of data returned (including inlined descriptors) */
+    1,          /* number of interfaces in this configuration */
+    1,          /* index of this configuration */
+    0,          /* configuration name string index */
+    (1 << 7) | USBATTR_REMOTEWAKE,                           /* attributes */
+    USB_CFG_MAX_BUS_POWER/2,            /* max USB current in 2mA units */
+/* interface descriptor follows inline: */
+    9,          /* sizeof(usbDescrInterface): length of descriptor in bytes */
+    USBDESCR_INTERFACE, /* descriptor type */
+    0,          /* index of this interface */
+    0,          /* alternate setting for this interface */
+    USB_CFG_HAVE_INTRIN_ENDPOINT + USB_CFG_HAVE_INTRIN_ENDPOINT3, /* endpoints excl 0: number of endpoint descriptors to follow */
+    USB_CFG_INTERFACE_CLASS,
+    USB_CFG_INTERFACE_SUBCLASS,
+    USB_CFG_INTERFACE_PROTOCOL,
+    0,          /* string index for interface */
+    9,          /* sizeof(usbDescrHID): length of descriptor in bytes */
+    USBDESCR_HID,   /* descriptor type: HID */
+    0x01, 0x01, /* BCD representation of HID version */
+    0x00,       /* target country code */
+    0x01,       /* number of HID Report (or other HID class) Descriptor infos to follow */
+    0x22,       /* descriptor type: report */
+    USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH, 0,  /* total length of report descriptor */
+    7,          /* sizeof(usbDescrEndpoint) */
+    USBDESCR_ENDPOINT,  /* descriptor type = endpoint */
+    (char)0x81, /* IN endpoint number 1 */
+    0x03,       /* attrib: Interrupt endpoint */
+    8, 0,       /* maximum packet size */
+    USB_CFG_INTR_POLL_INTERVAL, /* in ms */
+};
+
 /*----------------------------------------------------------*/
 /* definition about USB keyboard 		 					*/
 /* see : "Device Class Definition for HID v.1.11"			*/ 
@@ -170,6 +206,10 @@ void addKey(uchar index)
 
 #undef M
 
+#define USB_ACTIVE 	0
+#define USB_SLEEPING 	1
+#define USB_WAKING 	2
+
 int main(void)
 {
 	uchar i=250;
@@ -221,10 +261,32 @@ int main(void)
 	reportBuffer2.reportId = 2;
 
 	sei();
+	int nloops=0;
+	unsigned char old_sof = usbSofCount;
+	char usb_sleep = USB_ACTIVE;
 	for(;;){				/* main event loop */
 		uchar q;
 		wdt_reset();
 		usbPoll();
+
+		// during normal operation, a SOF marker is sent by the host every 1ms
+		// if no SOF markers are received for a longer period of time, it 
+		// indicates that the USB bus has been suspended (or disconnected, but 
+		// then we lose power as well)
+		
+		if(usbSofCount == old_sof) {
+			// I was too lazy to use a timer, so I count how many iterations of
+			// the main loop have passed without a SOF marker
+			nloops++;
+
+			if(nloops > 16 && usb_sleep == USB_ACTIVE)  {
+				usb_sleep = USB_SLEEPING;
+			}
+		} else {
+			old_sof = usbSofCount;
+			nloops = 0;
+			usb_sleep = USB_ACTIVE;
+		}
 
 		static uchar oldrows[18];
 		uchar rows[18];
@@ -329,6 +391,27 @@ int main(void)
 					keyDidChange = 1;
 				oldrows[q] = rows[q];
 			}
+		}
+
+		if(usb_sleep != USB_ACTIVE) {
+			if(usb_sleep == USB_SLEEPING && keyDidChange) {
+				// send USB remote wakeup by signalling SE0 (both D+ and D- low) for 10 ms
+				unsigned char tmp0 = PORTD;
+				unsigned char tmp1 = DDRD;
+				cli(); // disable interrupts, prevent V-USB from interfering
+				PORTD=(tmp0 & ~(1<<USB_CFG_DMINUS_BIT)) | (1<<USB_CFG_DPLUS_BIT);
+				DDRD|=((1<<USB_CFG_DPLUS_BIT)|(1<<USB_CFG_DMINUS_BIT));
+				for(i=0;i<10;i++) {
+					wdt_reset();
+					_delay_ms(1);
+				}
+				PORTD = tmp0;
+				DDRD = tmp1;
+				usb_sleep = USB_WAKING;
+				sei();
+			}
+
+			continue;
 		}
 
 		if (TIFR & _BV(TOV0)) {		/* 4ms period expired */ 

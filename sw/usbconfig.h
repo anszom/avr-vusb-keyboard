@@ -171,7 +171,7 @@ section at the end of this file).
 /* This macro (if defined) is executed when a USB SET_ADDRESS request was
  * received.
  */
-#define USB_COUNT_SOF                   0
+#define USB_COUNT_SOF                   1
 /* define this macro to 1 if you need the global variable "usbSofCount" which
  * counts SOF packets. This feature requires that the hardware interrupt is
  * connected to D- instead of D+.
@@ -345,7 +345,7 @@ section at the end of this file).
  */
 
 #define USB_CFG_DESCR_PROPS_DEVICE                  0
-#define USB_CFG_DESCR_PROPS_CONFIGURATION           0
+#define USB_CFG_DESCR_PROPS_CONFIGURATION           (9+9+9+7)
 #define USB_CFG_DESCR_PROPS_STRINGS                 0
 #define USB_CFG_DESCR_PROPS_STRING_0                0
 #define USB_CFG_DESCR_PROPS_STRING_VENDOR           0
@@ -372,13 +372,13 @@ section at the end of this file).
  * which is not fully supported (such as IAR C) or if you use a differnt
  * interrupt than INT0, you may have to define some of these.
  */
-/* #define USB_INTR_CFG            MCUCR */
-/* #define USB_INTR_CFG_SET        ((1 << ISC00) | (1 << ISC01)) */
-/* #define USB_INTR_CFG_CLR        0 */
-/* #define USB_INTR_ENABLE         GIMSK */
-/* #define USB_INTR_ENABLE_BIT     INT0 */
-/* #define USB_INTR_PENDING        GIFR */
-/* #define USB_INTR_PENDING_BIT    INTF0 */
-/* #define USB_INTR_VECTOR         INT0_vect */
+#define USB_INTR_CFG            MCUCR
+#define USB_INTR_CFG_SET        ((1 << ISC00) | (1 << ISC01))
+#define USB_INTR_CFG_CLR        0
+#define USB_INTR_ENABLE         GICR
+#define USB_INTR_ENABLE_BIT     INT1
+#define USB_INTR_PENDING        GIFR
+#define USB_INTR_PENDING_BIT    INTF1
+#define USB_INTR_VECTOR         INT1_vect
 
 #endif /* __usbconfig_h_included__ */
